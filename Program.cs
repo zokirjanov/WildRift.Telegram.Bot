@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Telegram.Bot;
 using WildRift.Telegram.Bot;
 using WildRift.Telegram.Bot.Controllers;
