@@ -25,8 +25,9 @@ namespace WildRift.Telegram.Bot.Services
 			using var scope = _serviceProvider.CreateScope();
 			var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-			var webhookAddress = $"{_botConfig.HostAddress}{_botConfig.Route}";
-			_logger.LogInformation("Setting webhook: {WebhookAddress}", webhookAddress);
+			//var webhookAddress = $"{_botConfig.HostAddress}{_botConfig.Route}";
+			var webhookAddress = $"https://api.telegram.org/bot6598757041:AAFAAOc0CBkk7f1lhqHItJYEm4bCpA0uxFE/setwebhook?url=https://7743-91-90-219-121.ngrok.io";
+			_logger.LogInformation("Setting webhook: {https://be85-91-90-219-121.ngrok.io}", webhookAddress);
 			await botClient.SetWebhookAsync(
 				url: webhookAddress,
 				allowedUpdates: Array.Empty<UpdateType>(),
