@@ -1,10 +1,12 @@
 ﻿namespace WildRift.Telegram.Bot.Models
 {
-    public class BuildItems
+    public class BuildItems : BaseModel
     {
-        public long Id { get; set; }
-        public long StickerID { get; set; }
+        public long ItemId { get; set; }
+        public long StickerId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Stats { get; set; }
+        public string Passive { get; set; }
+        public string UpdatedPatch { get; set; }
     }
 }
