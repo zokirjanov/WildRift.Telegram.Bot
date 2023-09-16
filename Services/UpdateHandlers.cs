@@ -1,21 +1,27 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.EntityFrameworkCore;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.ReplyMarkups;
+using WildRift.Telegram.Bot.DbContexts;
+using WildRift.Telegram.Bot.Models;
 
 namespace WildRift.Telegram.Bot.Services
 {
 	public class UpdateHandlers
 	{
+		private readonly ITestService _adminService;
+
 		private readonly ITelegramBotClient _botClient;
 		private readonly ILogger<UpdateHandlers> _logger;
 
-		public UpdateHandlers(ITelegramBotClient botClient, ILogger<UpdateHandlers> logger)
+		public UpdateHandlers(ITelegramBotClient botClient, ILogger<UpdateHandlers> logger, ITestService adminService)
 		{
 			_botClient = botClient;
 			_logger = logger;
+			_adminService = adminService;
 		}
 
 		public Task HandleErrorAsync(Exception exception, CancellationToken cancellationToken)
@@ -32,27 +38,33 @@ namespace WildRift.Telegram.Bot.Services
 
 		public async Task HandleUpdateAsync(Update update, CancellationToken cancellationToken)
 		{
-			var handler = update switch
-			{
-				// UpdateType.Unknown:
-				// UpdateType.ChannelPost:
-				// UpdateType.EditedChannelPost:
-				// UpdateType.ShippingQuery:
-				// UpdateType.PreCheckoutQuery:
-				// UpdateType.Poll:
-				{ Message: { } message } => BotOnMessageReceived(message, cancellationToken),
-				{ EditedMessage: { } message } => BotOnMessageReceived(message, cancellationToken),
-				{ CallbackQuery: { } callbackQuery } => BotOnCallbackQueryReceived(callbackQuery, cancellationToken),
-				{ InlineQuery: { } inlineQuery } => BotOnInlineQueryReceived(inlineQuery, cancellationToken),
-				{ ChosenInlineResult: { } chosenInlineResult } => BotOnChosenInlineResultReceived(chosenInlineResult, cancellationToken),
-				_ => UnknownUpdateHandlerAsync(update, cancellationToken)
-			};
+				var handler = update switch
+				{
+					// UpdateType.Unknown:
+					// UpdateType.ChannelPost:
+					// UpdateType.EditedChannelPost:
+					// UpdateType.ShippingQuery:
+					// UpdateType.PreCheckoutQuery:
+					// UpdateType.Poll:
+					{ Message: { } message } => BotOnMessageReceived(message, cancellationToken),
+					{ EditedMessage: { } message } => BotOnMessageReceived(message, cancellationToken),
+					{ CallbackQuery: { } callbackQuery } => BotOnCallbackQueryReceived(callbackQuery, cancellationToken),
+					{ InlineQuery: { } inlineQuery } => BotOnInlineQueryReceived(inlineQuery, cancellationToken),
+					{ ChosenInlineResult: { } chosenInlineResult } => BotOnChosenInlineResultReceived(chosenInlineResult, cancellationToken),
+					_ => UnknownUpdateHandlerAsync(update, cancellationToken)
+				};
 
 			await handler;
 		}
 
 		private async Task BotOnMessageReceived(Message message, CancellationToken cancellationToken)
 		{
+			_adminService.Test("sdfsfssfdsd");
+
+
+
+
+
 			_logger.LogInformation("Receive message type: {MessageType}", message.Type);
 			if (message.Text is not { } messageText)
 				return;

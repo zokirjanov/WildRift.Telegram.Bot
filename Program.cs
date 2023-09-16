@@ -1,7 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
 using Telegram.Bot;
 using WildRift.Telegram.Bot;
 using WildRift.Telegram.Bot.Controllers;
+using WildRift.Telegram.Bot.DbContexts;
 using WildRift.Telegram.Bot.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +14,6 @@ builder.Services.Configure<BotConfiguration>(botConfigurationSection);
 
 var botConfiguration = botConfigurationSection.Get<BotConfiguration>();
 
-
-
 builder.Services.AddHttpClient("telegram_bot_client")
 				.AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
 				{
@@ -21,9 +22,17 @@ builder.Services.AddHttpClient("telegram_bot_client")
 					return new TelegramBotClient(options, httpClient);
 				});
 
-builder.Services.AddScoped<UpdateHandlers>();
 
+///// Connection String To MySql Database
+string connectionString = builder.Configuration.GetConnectionString("connectionString");
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 11));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, serverVersion));
+
+
+builder.Services.AddScoped<UpdateHandlers>();
+builder.Services.AddScoped<ITestService, TestClsss>();
 builder.Services.AddHostedService<ConfigureWebhook>();
+
 
 builder.Services
 	.AddControllers()
