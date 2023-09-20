@@ -59,12 +59,6 @@ namespace WildRift.Telegram.Bot.Services
 
 		private async Task BotOnMessageReceived(Message message, CancellationToken cancellationToken)
 		{
-			_adminService.Test("sdfsfssfdsd");
-
-
-
-
-
 			_logger.LogInformation("Receive message type: {MessageType}", message.Type);
 			if (message.Text is not { } messageText)
 				return;
@@ -153,7 +147,7 @@ namespace WildRift.Telegram.Bot.Services
 					ChatAction.UploadPhoto,
 					cancellationToken: cancellationToken);
 
-				const string filePath = "Files/tux.png";
+				const string filePath = "Files/TestPic.jpg";
 				await using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 				var fileName = filePath.Split(Path.DirectorySeparatorChar).Last();
 

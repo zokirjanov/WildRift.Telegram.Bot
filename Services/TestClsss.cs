@@ -16,7 +16,6 @@ namespace WildRift.Telegram.Bot.Services
 		{
 			BuildItems item = new BuildItems()
 			{
-				Id = 1,
 				StickerId = 1,
 				Name = text,
 			};
