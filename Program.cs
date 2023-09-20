@@ -30,7 +30,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connecti
 
 
 builder.Services.AddScoped<UpdateHandlers>();
-builder.Services.AddScoped<ITestService, TestClsss>();
+builder.Services.AddScoped<IBotService, BotService>();
 builder.Services.AddHostedService<ConfigureWebhook>();
 
 

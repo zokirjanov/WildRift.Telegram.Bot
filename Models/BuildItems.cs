@@ -3,7 +3,7 @@
     public class BuildItems : BaseModel
     {
         public long ItemId { get; set; }
-        public long StickerId { get; set; }
+        public string StickerId { get; set; }
         public string Name { get; set; }
         public string Stats { get; set; }
         public string Passive { get; set; }

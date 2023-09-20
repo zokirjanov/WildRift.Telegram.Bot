@@ -12,12 +12,12 @@ namespace WildRift.Telegram.Bot.Services
 {
 	public class UpdateHandlers
 	{
-		private readonly ITestService _adminService;
+		private readonly IBotService _adminService;
 
 		private readonly ITelegramBotClient _botClient;
 		private readonly ILogger<UpdateHandlers> _logger;
 
-		public UpdateHandlers(ITelegramBotClient botClient, ILogger<UpdateHandlers> logger, ITestService adminService)
+		public UpdateHandlers(ITelegramBotClient botClient, ILogger<UpdateHandlers> logger, IBotService adminService)
 		{
 			_botClient = botClient;
 			_logger = logger;
@@ -62,6 +62,8 @@ namespace WildRift.Telegram.Bot.Services
 			_logger.LogInformation("Receive message type: {MessageType}", message.Type);
 			if (message.Text is not { } messageText)
 				return;
+
+			GetCommandMenu();
 
 			var action = messageText.Split(' ')[0] switch
 			{
@@ -252,6 +254,18 @@ namespace WildRift.Telegram.Bot.Services
 		{
 			_logger.LogInformation("Unknown update type: {UpdateType}", update.Type);
 			return Task.CompletedTask;
+		}
+
+		private async void GetCommandMenu()
+		{
+			var commands = new[]
+			{
+				new BotCommand { Command = "start", Description = "Start the bot" },
+				new BotCommand { Command = "help", Description = "Get help" },
+				new BotCommand { Command = "menu", Description = "Access the menu" },
+			};
+
+			await _botClient.SetMyCommandsAsync(commands);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace WildRift.Telegram.Bot.Services
 {
-	public interface ITestService
+	public interface IBotService
 	{
 		Task Test(string text);
 	}

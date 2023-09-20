@@ -3,11 +3,11 @@ using WildRift.Telegram.Bot.Models;
 
 namespace WildRift.Telegram.Bot.Services
 {
-	public class TestClsss : ITestService
+	public class BotService : IBotService
 	{
 		private readonly AppDbContext _dbContext;
 
-		public TestClsss(AppDbContext dbContext)
+		public BotService(AppDbContext dbContext)
 		{
 			_dbContext = dbContext;
 		}
@@ -16,11 +16,10 @@ namespace WildRift.Telegram.Bot.Services
 		{
 			BuildItems item = new BuildItems()
 			{
-				StickerId = 1,
 				Name = text,
 			};
 
-			_dbContext.Items.Add(item);
+			 _dbContext.Items.Add(item);
 			int x = _dbContext.SaveChanges();
 
 			int s = 3;
