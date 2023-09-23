@@ -63,7 +63,13 @@ namespace WildRift.Telegram.Bot.Services
 			if (message.Text is not { } messageText)
 				return;
 
-			GetCommandMenu();
+			if(message.Text == "/iteminfo" || message.Text == "/iteminfo@wruz_bot")
+			{
+				await _adminService.ItemInfoAsync(_botClient, message, cancellationToken);
+				return;
+			}
+
+
 
 			var action = messageText.Split(' ')[0] switch
 			{
@@ -254,18 +260,6 @@ namespace WildRift.Telegram.Bot.Services
 		{
 			_logger.LogInformation("Unknown update type: {UpdateType}", update.Type);
 			return Task.CompletedTask;
-		}
-
-		private async void GetCommandMenu()
-		{
-			var commands = new[]
-			{
-				new BotCommand { Command = "start", Description = "Start the bot" },
-				new BotCommand { Command = "help", Description = "Get help" },
-				new BotCommand { Command = "menu", Description = "Access the menu" },
-			};
-
-			await _botClient.SetMyCommandsAsync(commands);
 		}
 	}
 }

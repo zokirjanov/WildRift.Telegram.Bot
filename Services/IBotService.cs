@@ -1,9 +1,10 @@
-﻿using Telegram.Bot.Types;
+﻿using Telegram.Bot;
+using Telegram.Bot.Types;
 
 namespace WildRift.Telegram.Bot.Services
 {
 	public interface IBotService
 	{
-		Task Test(string text);
+		Task ItemInfoAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken);
 	}
 }
