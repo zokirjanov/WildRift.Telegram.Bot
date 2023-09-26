@@ -77,7 +77,8 @@ namespace WildRift.Telegram.Bot.Services
 				_ => Usage(_botClient, message, cancellationToken)
 			};
 			Message sentMessage = await action;
-			_logger.LogInformation("The message was sent with id: {SentMessageId}", sentMessage.MessageId);
+			if (sentMessage != null)
+				_logger.LogInformation("The message was sent with id: {SentMessageId}", sentMessage.MessageId);
 
 			// Send inline keyboard
 			// You can process responses in BotOnCallbackQueryReceived handler

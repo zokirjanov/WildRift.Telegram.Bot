@@ -48,14 +48,13 @@ namespace WildRift.Telegram.Bot.Services
 		{
 			try
 			{
-				string stickerID = message.ReplyToMessage.Sticker.FileId;
+				string stickerID = message.ReplyToMessage.Sticker.FileUniqueId;
 
 				var sticker = await _dbContext.Items.FirstOrDefaultAsync(that => that.StickerId == stickerID);
-				if (sticker == null) return return_message;
+				if (sticker == null) return null;
 
 				string caption = $"{sticker.Name}\n\n" +
 								 $"Stats: \n{sticker.Stats}\n\n" +
-								 $"Passive: {sticker.Passive}\n\n" +
 								 $"Patch: {sticker.Patch}";
 
 				InlineKeyboardMarkup inlineKeyboard = new(
