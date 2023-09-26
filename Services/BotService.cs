@@ -18,6 +18,32 @@ namespace WildRift.Telegram.Bot.Services
 			_dbContext = dbContext;
 		}
 
+		public async Task ItemImageInfoAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+		{
+			try
+			{
+				await botClient.SendChatActionAsync(
+					  message.Chat.Id,
+					  ChatAction.UploadPhoto,
+					  cancellationToken: cancellationToken);
+
+				const string filePath = "Files/Items/TrinityForce.jpg";
+				await using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+				var fileName = filePath.Split(Path.DirectorySeparatorChar).Last();
+
+				await botClient.SendPhotoAsync(
+					  chatId: message.Chat.Id,
+					  photo: new InputFileStream(fileStream, fileName),
+					  caption: "Nice Picture",
+					  cancellationToken: cancellationToken);
+			}
+			catch (Exception)
+			{
+				_logger.LogInformation("Error occurs while uploading photo", message.Type);
+			}
+
+		}
+
 		public async Task ItemInfoAsync(ITelegramBotClient _botClient, Message message, CancellationToken cancellationToken)
 		{
 			string stickerID = message.ReplyToMessage.Sticker.FileId;
