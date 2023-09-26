@@ -63,16 +63,11 @@ namespace WildRift.Telegram.Bot.Services
 			if (message.Text is not { } messageText)
 				return;
 
-			if(message.Text == "/iteminfo" || message.Text == "/iteminfo@wruz_bot")
+		    var action = messageText.Split(' ')[0] switch
 			{
-				await _adminService.ItemInfoAsync(_botClient, message, cancellationToken);
-				return;
-			}
+				"/iteminfo" or "/iteminfo@wruz_bot" => _adminService.ItemInfoAsync(_botClient, message, cancellationToken),
+				"/imageinfo" or "/imageinfo@wruz_bot" => _adminService.ItemImageInfoAsync(_botClient, message, cancellationToken),
 
-
-
-			var action = messageText.Split(' ')[0] switch
-			{
 				"/inline_keyboard" => SendInlineKeyboard(_botClient, message, cancellationToken),
 				"/keyboard" => SendReplyKeyboard(_botClient, message, cancellationToken),
 				"/remove" => RemoveKeyboard(_botClient, message, cancellationToken),
@@ -128,9 +123,9 @@ namespace WildRift.Telegram.Bot.Services
 						new KeyboardButton[] { "1.1", "1.2" },
 						new KeyboardButton[] { "2.1", "2.2" },
 					})
-				{
-					ResizeKeyboard = true
-				};
+					{
+						ResizeKeyboard = true
+					};
 
 				return await botClient.SendTextMessageAsync(
 					chatId: message.Chat.Id,

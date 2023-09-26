@@ -18,39 +18,40 @@ namespace WildRift.Telegram.Bot.Services
 			_dbContext = dbContext;
 		}
 
-		public async Task ItemImageInfoAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+		public async Task<Message> ItemImageInfoAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
 		{
 			try
 			{
 				await botClient.SendChatActionAsync(
-					  message.Chat.Id,
-					  ChatAction.UploadPhoto,
-					  cancellationToken: cancellationToken);
+					message.Chat.Id,
+					ChatAction.UploadPhoto,
+					cancellationToken: cancellationToken);
 
 				const string filePath = "Files/Items/TrinityForce.jpg";
 				await using FileStream fileStream = new(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 				var fileName = filePath.Split(Path.DirectorySeparatorChar).Last();
 
-				await botClient.SendPhotoAsync(
-					  chatId: message.Chat.Id,
-					  photo: new InputFileStream(fileStream, fileName),
-					  caption: "Nice Picture",
-					  cancellationToken: cancellationToken);
+				return await botClient.SendPhotoAsync(
+					chatId: message.Chat.Id,
+					replyToMessageId: message.ReplyToMessage.MessageId,
+					photo: new InputFileStream(fileStream, fileName),
+					cancellationToken: cancellationToken);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				_logger.LogInformation("Error occurs while uploading photo", message.Type);
+				Console.WriteLine($"An error occurred: {ex.Message}");
+				return null; 
 			}
-
 		}
 
-		public async Task ItemInfoAsync(ITelegramBotClient _botClient, Message message, CancellationToken cancellationToken)
+		public async Task<Message> ItemInfoAsync(ITelegramBotClient _botClient, Message message, CancellationToken cancellationToken)
 		{
-			string stickerID = message.ReplyToMessage.Sticker.FileId;
-
 			try
 			{
+				string stickerID = message.ReplyToMessage.Sticker.FileId;
+
 				var sticker = await _dbContext.Items.FirstOrDefaultAsync(that => that.StickerId == stickerID);
+				if (sticker == null) return return_message;
 
 				string caption = $"{sticker.Name}\n\n" +
 								 $"Stats: \n{sticker.Stats}\n\n" +
@@ -60,25 +61,25 @@ namespace WildRift.Telegram.Bot.Services
 				InlineKeyboardMarkup inlineKeyboard = new(
 					new[]
 					{
-                    new []
+					new []
 					{
 						InlineKeyboardButton.WithCallbackData("🇷🇺 Ru", "ru"),
 						InlineKeyboardButton.WithCallbackData("🇺🇿 Uz", "uz"),
 					},
 					});
 
-				await  _botClient.SendTextMessageAsync(
+				return await _botClient.SendTextMessageAsync(
 					chatId: message.Chat.Id,
 					text: caption,
 					replyMarkup: inlineKeyboard,
 					replyToMessageId: message.ReplyToMessage.MessageId,
 					cancellationToken: cancellationToken);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				_logger.LogInformation("Receive message type: {MessageType}", message.Type);
+				Console.WriteLine($"An error occurred: {ex.Message}");
+				return null;
 			}
-			throw new NotImplementedException();
 		}
 	}
 }
