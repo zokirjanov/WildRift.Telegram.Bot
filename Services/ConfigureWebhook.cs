@@ -28,6 +28,8 @@ namespace WildRift.Telegram.Bot.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
 		{
+			
+
 			using var scope = _serviceProvider.CreateScope();
 			var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
