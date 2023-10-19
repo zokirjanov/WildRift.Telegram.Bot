@@ -6,14 +6,14 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.ReplyMarkups;
 using WildRift.Telegram.Bot.DbContexts;
+using WildRift.Telegram.Bot.Interfaces;
 using WildRift.Telegram.Bot.Models;
 
 namespace WildRift.Telegram.Bot.Services
 {
-	public class UpdateHandlers
+    public class UpdateHandlers
 	{
 		private readonly IBotService _adminService;
-
 		private readonly ITelegramBotClient _botClient;
 		private readonly ILogger<UpdateHandlers> _logger;
 
@@ -65,6 +65,7 @@ namespace WildRift.Telegram.Bot.Services
 
 		    var action = messageText.Split(' ')[0] switch
 			{
+				"/start" => _adminService.BotOnStartAsync(_botClient, message, cancellationToken),
 				"/iteminfo" or "/iteminfo@wruz_bot" => _adminService.ItemInfoAsync(_botClient, message, cancellationToken),
 				"/imageinfo" or "/imageinfo@wruz_bot" => _adminService.ItemImageInfoAsync(_botClient, message, cancellationToken),
 

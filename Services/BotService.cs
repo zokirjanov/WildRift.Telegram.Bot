@@ -4,11 +4,12 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using WildRift.Telegram.Bot.DbContexts;
+using WildRift.Telegram.Bot.Interfaces;
 using WildRift.Telegram.Bot.Models;
 
 namespace WildRift.Telegram.Bot.Services
 {
-	public class BotService : IBotService
+    public class BotService : IBotService
 	{
 		private readonly AppDbContext _dbContext;
 		private readonly ILogger<UpdateHandlers> _logger;
@@ -16,6 +17,34 @@ namespace WildRift.Telegram.Bot.Services
 		public BotService(AppDbContext dbContext)
 		{
 			_dbContext = dbContext;
+		}
+
+		public async Task<Message> BotOnStartAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
+		{
+			try
+			{
+
+
+				ReplyKeyboardMarkup replyKeyboardMarkup = new(
+					new[]
+					{
+						new KeyboardButton[] { "1.1", "1.2" },
+						new KeyboardButton[] { "2.1", "2.2" },
+					})
+				{
+					ResizeKeyboard = true
+				};
+
+				return await botClient.SendTextMessageAsync(
+					chatId: message.Chat.Id,
+					text: "Choose",
+					replyMarkup: replyKeyboardMarkup,
+					cancellationToken: cancellationToken);
+			}
+			catch (Exception)
+			{
+				return null;
+			}
 		}
 
 		public async Task<Message> ItemImageInfoAsync(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)

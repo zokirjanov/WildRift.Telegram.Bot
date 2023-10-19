@@ -3,8 +3,10 @@ using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
 using Telegram.Bot;
 using WildRift.Telegram.Bot;
+using WildRift.Telegram.Bot.Configurations;
 using WildRift.Telegram.Bot.Controllers;
 using WildRift.Telegram.Bot.DbContexts;
+using WildRift.Telegram.Bot.Interfaces;
 using WildRift.Telegram.Bot.Services;
 
 var builder = WebApplication.CreateBuilder(args);
